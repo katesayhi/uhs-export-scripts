@@ -151,7 +151,7 @@ def process_excel_file(file_bytes, fname):
     except Exception as e: return [],str(e)
     ws=None
     for name in wb.sheetnames:
-        if "tổng hợp" in name.lower() or "tong hop" or "diem_th" in name.lower(): ws=wb[name]; break
+        if "tổng hợp" in name.lower() or "tong hop" in name.lower() or "diem_th" in name.lower(): ws=wb[name]; break
     if ws is None:
         return[],f"Không tìm thấy sheet 'Điểm tổng hợp'. Các sheet: {wb.sheetnames}"
     info=extract_general_info(ws); records=extract_score_table(ws)
