@@ -174,8 +174,18 @@ def check_data_files():
         (present if os.path.exists(os.path.join(DATA_DIR,fname)) else missing).append((cn,fname))
     return present,missing
 
+# def normalize_text(s):
+#     return re.sub(r"\s+"," ",str(s).strip().lower())
+
 def normalize_text(s):
-    return re.sub(r"\s+"," ",str(s).strip().lower())
+    import unicodedata, re
+    s = str(s)
+    s = unicodedata.normalize("NFKD", s)
+    s = ''.join(c for c in s if not unicodedata.combining(c))  # bỏ dấu
+    s = s.lower().strip()
+    s = re.sub(r"[^\w\s]", " ", s)
+    s = re.sub(r"\s+", " ", s)
+    return s
 
 def merge_and_build(df_diem, df_mapping):
     mapping=df_mapping.copy()
