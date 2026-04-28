@@ -184,7 +184,8 @@ def merge_and_build(df_diem, df_mapping):
     diem["_key"]=diem["Tên môn học"].apply(normalize_text)
     df_merged=diem.merge(mapping.drop(columns=["Tên môn học"]),on="_key",how="left").drop(columns=["_key"])
     def mlhp(row):
-        nam2=str(row["Năm học"]).split("-")[0][-2:]
+        nam_hoc = re.sub(r'\s*-\s*', '-', str(row["Năm học"]).strip())
+        nam2 = nam_hoc.split("-")[0][-2:]
         hk=HK_MAP.get(str(row["Học kỳ"]).strip(),str(row["Học kỳ"]).strip())
         msmh=str(row["MSMH"]) if pd.notna(row["MSMH"]) else "???"
         return f"{nam2}{hk}{msmh}01"
