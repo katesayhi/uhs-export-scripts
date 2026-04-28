@@ -179,10 +179,10 @@ def normalize_text(s):
 
 def merge_and_build(df_diem, df_mapping):
     mapping=df_mapping.copy()
-    mapping["_key"]=mapping["Tên môn học"].apply(normalize_text)
+    mapping["_key"]=mapping["MSMH"].apply(normalize_text)
     diem=df_diem.copy()
-    diem["_key"]=diem["Tên môn học"].apply(normalize_text)
-    df_merged=diem.merge(mapping.drop(columns=["Tên môn học"]),on="_key",how="left").drop(columns=["_key"])
+    diem["_key"]=diem["MSMH"].apply(normalize_text)
+    df_merged=diem.merge(mapping.drop(columns=["MSMH"]),on="_key",how="left").drop(columns=["_key"])
     def mlhp(row):
         nam_hoc = re.sub(r'\s*-\s*', '-', str(row["Năm học"]).strip())
         nam2 = nam_hoc.split("-")[0][-2:]
