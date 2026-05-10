@@ -146,16 +146,47 @@ def extract_score_table(ws):
             "Điểm chữ":            str(get("diem_chu")).strip() if get("diem_chu") else ""})
     return records
 
+# def process_excel_file(file_bytes, fname):
+#     try: wb=load_workbook(io.BytesIO(file_bytes),data_only=True)
+#     except Exception as e: return [],str(e)
+#     ws=None
+#     for name in wb.sheetnames:
+#         if "tổng hợp" in name.lower() or "tong hop" in name.lower() or "diem_th" in name.lower(): ws=wb[name]; break
+#     if ws is None:
+#         return[],f"Không tìm thấy sheet 'Điểm tổng hợp'. Các sheet: {wb.sheetnames}"
+#     info=extract_general_info(ws); records=extract_score_table(ws)
+#     return [{"File":fname,**info,**r} for r in records],None
+
 def process_excel_file(file_bytes, fname):
-    try: wb=load_workbook(io.BytesIO(file_bytes),data_only=True)
-    except Exception as e: return [],str(e)
-    ws=None
+    try:
+        wb = load_workbook(io.BytesIO(file_bytes), data_only=True)
+    except Exception as e:
+        return [], str(e)
+
+    # ── Mở rộng điều kiện tìm sheet tổng hợp ──────────────────
+    ws = None
     for name in wb.sheetnames:
-        if "tổng hợp" in name.lower() or "tong hop" in name.lower() or "diem_th" in name.lower(): ws=wb[name]; break
+        name_lower = name.lower().strip()
+        if ('tổng hợp' in name_lower
+                or 'tong hop' in name_lower
+                or 'diem_th' in name_lower      # ← thêm
+                or name_lower == 'th'):          # ← thêm
+            ws = wb[name]
+            break
+
     if ws is None:
-        return[],f"Không tìm thấy sheet 'Điểm tổng hợp'. Các sheet: {wb.sheetnames}"
-    info=extract_general_info(ws); records=extract_score_table(ws)
-    return [{"File":fname,**info,**r} for r in records],None
+        return [], (f"Không tìm thấy sheet 'Điểm tổng hợp'. "
+                    f"Các sheet hiện có: {wb.sheetnames}")
+
+    info    = extract_general_info(ws)
+    records = extract_score_table(ws)
+
+    # ── Cảnh báo nếu sheet có cấu trúc đúng nhưng dữ liệu trống ──
+    if not records:
+        return [], (f"Sheet '{ws.title}' không có dữ liệu học viên "
+                    f"(MSSV trống). Kiểm tra lại file gốc.")
+
+    return [{"File": fname, **info, **r} for r in records], None
 
 @st.cache_data(show_spinner=False)
 def load_ketqua_file(filepath):
