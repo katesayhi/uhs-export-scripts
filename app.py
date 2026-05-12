@@ -64,6 +64,11 @@ def normalize_score(v):
     try: return float(str(v).strip().replace(",","."))
     except: return None
 
+def normalize_nam_hoc(v):
+    """Chuẩn hóa năm học: '2024 - 2025' / '2024– 2025' → '2024-2025'."""
+    if not v: return v
+    return re.sub(r'\s*[-\u2013\u2014]\s*', '-', str(v).strip())
+
 def extract_general_info(ws):
     info={"Khoa":None,"Lớp":None,"Tên môn học":None,"Năm học":None,"Học kỳ":None,"Số tín chỉ":None}
     kws={"khoa":"Khoa","lớp":"Lớp","tên môn học":"Tên môn học",
@@ -75,6 +80,7 @@ def extract_general_info(ws):
                 if kw in val.lower() and info[field] is None:
                     for _,nv in rv[i+1:]:
                         if nv and nv not in(":",""): info[field]=nv; break
+    info["N\u0103m h\u1ecdc"] = normalize_nam_hoc(info["N\u0103m h\u1ecdc"])
     return info
 
 def find_header_row(ws):
