@@ -108,7 +108,7 @@ def map_columns(ws,header_rows):
         if   "mssv" in txt:                                          col_map["mssv"]=col
         elif txt in("họ","họ và tên","ho"):                         col_map["ho"]=col
         elif txt in("tên","ten"):                                    col_map["ten"]=col
-        elif "thường xuyên" in txt or "quá trình" in txt:           col_map["diem_qt"]=col
+        elif "thường xuyên" in txt or "quá trình" in txt or "giữa kỳ" in txt:           col_map["diem_qt"]=col
         elif "kết thúc" in txt or("thi" in txt and "điểm" in txt):  col_map["diem_thi"]=col
         elif "làm tròn" in txt or "đ. số" in txt:                   col_map["diem_lam_tron"]=col
         elif "điểm tb" in txt or "trung bình" in txt:               col_map["diem_tb"]=col
