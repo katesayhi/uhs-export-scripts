@@ -398,7 +398,7 @@ def merge_and_build(df_diem, df_mapping):
     # Sheet Daydu
     want=["Năm học","Học kỳ","Khoa","Mã lớp","Tên môn học","Số tín chỉ","MSMH","Mã lớp học phần",
           "MSSV","Họ và tên","Điểm quá trình (30%)","Điểm giữa kỳ (30%)", "Điểm thi (70%)","Điểm TB","Điểm làm tròn","Điểm chữ",
-          "Trọng số điểm Quá trình","Trọng số điểm GK","Trọng số điểm CK","Điểm đạt"]
+          "Trọng số điểm Thường xuyên","Trọng số điểm GK","Trọng số điểm CK","Điểm đạt"]
     df_daydu=df_out[[c for c in want if c in df_out.columns]]
     # Sheet LopHocPhan
     lhp_cols=[c for c in ["Năm học","Học kỳ","Mã lớp","MSMH","Mã lớp học phần","Tên môn học"] if c in df_out.columns]
