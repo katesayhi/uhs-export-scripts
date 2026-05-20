@@ -108,7 +108,8 @@ def map_columns(ws,header_rows):
         if   "mssv" in txt:                                          col_map["mssv"]=col
         elif txt in("họ","họ và tên","ho"):                         col_map["ho"]=col
         elif txt in("tên","ten"):                                    col_map["ten"]=col
-        elif "thường xuyên" in txt or "quá trình" in txt or "giữa kỳ" in txt:           col_map["diem_qt"]=col
+        elif "thường xuyên" in txt or "quá trình" in txt:          col_map["diem_qt"]=col
+        elif "giữa kỳ" in txt:           col_map["diem_gk"]=col
         elif "kết thúc" in txt or("thi" in txt and "điểm" in txt):  col_map["diem_thi"]=col
         elif "làm tròn" in txt or "đ. số" in txt:                   col_map["diem_lam_tron"]=col
         elif "điểm tb" in txt or "trung bình" in txt:               col_map["diem_tb"]=col
@@ -119,6 +120,7 @@ def map_columns(ws,header_rows):
             if cell.value:
                 t=str(cell.value).strip()
                 if t=="30%" and "diem_qt"  not in col_map: col_map["diem_qt"] =cell.column
+                if t=="30%" and "diem_gk"  not in col_map: col_map["diem_gk"] =cell.column
                 if t=="70%" and "diem_thi" not in col_map: col_map["diem_thi"]=cell.column
     return col_map
 
@@ -146,6 +148,7 @@ def extract_score_table(ws):
         ten=str(get("ten")).strip() if get("ten") else ""
         records.append({"MSSV":mv,"Họ và tên":f"{ho} {ten}".strip(),
             "Điểm quá trình (30%)":normalize_score(get("diem_qt")),
+            "Điểm giữa kỳ (30%)": normalize_score(get("diem_gk")),
             "Điểm thi (70%)":      normalize_score(get("diem_thi")),
             "Điểm TB":             normalize_score(get("diem_tb")),
             "Điểm làm tròn":       normalize_score(get("diem_lam_tron")),
@@ -299,6 +302,7 @@ def _process_formula_file(wb_raw, fname, file_bytes):
 
         records.append({"MSSV":mssv,"Họ và tên":hoten,
             "Điểm quá trình (30%)":diem_tx,
+            "Điểm giữa kỳ (30%)":  diem_tx,
             "Điểm thi (70%)":      diem_kt,
             "Điểm TB":             diem_tb,
             "Điểm làm tròn":       None,
@@ -393,7 +397,7 @@ def merge_and_build(df_diem, df_mapping):
     df_out=df_merged.rename(columns={"Lớp":"Mã lớp"})
     # Sheet Daydu
     want=["Năm học","Học kỳ","Khoa","Mã lớp","Tên môn học","Số tín chỉ","MSMH","Mã lớp học phần",
-          "MSSV","Họ và tên","Điểm quá trình (30%)","Điểm thi (70%)","Điểm TB","Điểm làm tròn","Điểm chữ",
+          "MSSV","Họ và tên","Điểm quá trình (30%)","Điểm giữa kỳ (30%)", "Điểm thi (70%)","Điểm TB","Điểm làm tròn","Điểm chữ",
           "Trọng số điểm Thường xuyên","Trọng số điểm GK","Trọng số điểm CK","Điểm đạt"]
     df_daydu=df_out[[c for c in want if c in df_out.columns]]
     # Sheet LopHocPhan
