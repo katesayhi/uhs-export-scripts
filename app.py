@@ -397,7 +397,7 @@ def merge_and_build(df_diem, df_mapping):
           "Trọng số điểm Thường xuyên","Trọng số điểm GK","Trọng số điểm CK","Điểm đạt"]
     df_daydu=df_out[[c for c in want if c in df_out.columns]]
     # Sheet LopHocPhan
-    lhp_cols=[c for c in ["Năm học","Học kỳ","Mã lớp","MSMH","Mã lớp học phần"] if c in df_out.columns]
+    lhp_cols=[c for c in ["Năm học","Học kỳ","Mã lớp","MSMH","Mã lớp học phần","Tên môn học"] if c in df_out.columns]
     df_lhp=(df_out[lhp_cols].drop_duplicates(subset="Mã lớp học phần").reset_index(drop=True))
     df_lhp["Rớt môn nếu rớt điểm thành phần"]=""
     # Sheet SV
