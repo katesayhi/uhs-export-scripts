@@ -7,7 +7,7 @@ Data flow:
   3. Join theo Tên môn học (case-insensitive) → tạo Mã lớp học phần
   4. Xuất 1 file Excel 3 sheet: Daydu / LopHocPhan / SV_LopHocPhan
 """
-import os, re, io
+import os, re, io, unicodedata
 import streamlit as st
 import pandas as pd
 from openpyxl import load_workbook
@@ -381,7 +381,10 @@ def check_data_files():
 
 def normalize_text(s):
     t = str(s).strip().lower()
-    t = re.sub(r"[-\u2013\u2014]", " ", t)   # bỏ dấu gạch ngang/gạch nối, coi như khoảng trắng
+    t = re.sub(r"[-\u2013\u2014]", " ", t)   # bỏ dấu gạch ngang/gạch nối
+    t = t.replace("đ", "d")
+    t = unicodedata.normalize("NFD", t)
+    t = "".join(c for c in t if unicodedata.category(c) != "Mn")  # bỏ hết dấu thanh điệu
     t = re.sub(r"\s+", " ", t).strip()
     return t
 
