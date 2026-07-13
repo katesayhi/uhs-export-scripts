@@ -380,7 +380,10 @@ def check_data_files():
     return present,missing
 
 def normalize_text(s):
-    return re.sub(r"\s+"," ",str(s).strip().lower())
+    t = str(s).strip().lower()
+    t = re.sub(r"[-\u2013\u2014]", " ", t)   # bỏ dấu gạch ngang/gạch nối, coi như khoảng trắng
+    t = re.sub(r"\s+", " ", t).strip()
+    return t
 
 def merge_and_build(df_diem, df_mapping):
     mapping=df_mapping.copy()
