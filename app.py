@@ -69,6 +69,12 @@ def normalize_nam_hoc(v):
     if not v: return v
     return re.sub(r'\s*[-\u2013\u2014]\s*', '-', str(v).strip())
 
+def normalize_hoc_ky(v):
+    """Chuẩn hóa học kỳ: 'I' -> '1', 'II' -> '2', 'III' -> '3'; giữ nguyên nếu đã là số hoặc không nhận diện được."""
+    if not v: return v
+    key = str(v).strip().upper()
+    return HK_MAP.get(key, str(v).strip())
+
 def extract_general_info(ws):
     info={"Khoa":None,"Lớp":None,"Tên môn học":None,"Năm học":None,"Học kỳ":None,"Số tín chỉ":None}
     kws={"khoa":"Khoa","lớp":"Lớp","tên môn học":"Tên môn học",
@@ -81,6 +87,7 @@ def extract_general_info(ws):
                     for _,nv in rv[i+1:]:
                         if nv and nv not in(":",""): info[field]=nv; break
     info["N\u0103m h\u1ecdc"] = normalize_nam_hoc(info["N\u0103m h\u1ecdc"])
+    info["H\u1ecdc k\u1ef3"] = normalize_hoc_ky(info["H\u1ecdc k\u1ef3"])
     return info
 
 def find_header_row(ws):
@@ -196,6 +203,7 @@ def _extract_info_dshvdt(ws):
                             if nv and nv not in (":",""):
                                 info[field] = nv; break
     info["Năm học"] = normalize_nam_hoc(info["Năm học"])
+    info["Học kỳ"] = normalize_hoc_ky(info["Học kỳ"])
     return info
 
 def _process_formula_file(wb_raw, fname, file_bytes):
