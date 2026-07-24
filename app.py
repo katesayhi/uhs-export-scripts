@@ -61,7 +61,7 @@ html,body,[class*="css"]{font-family:'Be Vietnam Pro',sans-serif}
 def normalize_score(v):
     if v is None: return None
     if isinstance(v,(int,float)): return float(v)
-    try: return round(float(str(v).strip().replace(",",".")),1)
+    try: return float(str(v).strip().replace(",","."))
     except: return None
 
 def normalize_nam_hoc(v):
