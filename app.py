@@ -69,6 +69,11 @@ def round_0_1(v):
     if v is None: return None
     return round(round(v*10)/10, 1)
 
+def round_0_5(v):
+    """Làm tròn điểm trung bình đến 0.5 (VD: 7.24 -> 7.0, 7.26 -> 7.5)."""
+    if v is None: return None
+    return round(round(v*2)/2, 1)
+
 def normalize_nam_hoc(v):
     """Chuẩn hóa năm học: '2024 - 2025' / '2024– 2025' → '2024-2025'."""
     if not v: return v
@@ -163,7 +168,7 @@ def extract_score_table(ws):
             "Điểm giữa kỳ (30%)": round_0_1(normalize_score(get("diem_gk"))),
             "Điểm thi (70%)":      round_0_1(normalize_score(get("diem_thi"))),
             "Điểm TB":             normalize_score(get("diem_tb")),
-            "Điểm làm tròn":       normalize_score(get("diem_tb")),
+            "Điểm làm tròn":       round_0_5(normalize_score(get("diem_tb"))),
             "Điểm chữ":            str(get("diem_chu")).strip() if get("diem_chu") else ""})
     return records
 
@@ -318,7 +323,7 @@ def _process_formula_file(wb_raw, fname, file_bytes):
             "Điểm giữa kỳ (30%)":  diem_tx,
             "Điểm thi (70%)":      diem_kt,
             "Điểm TB":             diem_tb,
-            "Điểm làm tròn":       None,
+            "Điểm làm tròn":       round_0_5(diem_tb),
             "Điểm chữ":            ""})
 
     return [{"File":fname,**info,**r} for r in records], None
