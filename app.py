@@ -64,6 +64,11 @@ def normalize_score(v):
     try: return round(float(str(v).strip().replace(",",".")),1)
     except: return None
 
+def round_0_1(v):
+    """Làm tròn điểm thành phần đến 0.1 (VD: 7.24 -> 7.2, 7.26 -> 7.3)."""
+    if v is None: return None
+    return round(round(v*10)/10, 1)
+
 def normalize_nam_hoc(v):
     """Chuẩn hóa năm học: '2024 - 2025' / '2024– 2025' → '2024-2025'."""
     if not v: return v
@@ -154,11 +159,11 @@ def extract_score_table(ws):
         ho =str(get("ho")).strip()  if get("ho")  else ""
         ten=str(get("ten")).strip() if get("ten") else ""
         records.append({"MSSV":mv,"Họ và tên":f"{ho} {ten}".strip(),
-            "Điểm quá trình (30%)":normalize_score(get("diem_qt")),
-            "Điểm giữa kỳ (30%)": normalize_score(get("diem_gk")),
-            "Điểm thi (70%)":      normalize_score(get("diem_thi")),
+            "Điểm quá trình (30%)":round_0_1(normalize_score(get("diem_qt"))),
+            "Điểm giữa kỳ (30%)": round_0_1(normalize_score(get("diem_gk"))),
+            "Điểm thi (70%)":      round_0_1(normalize_score(get("diem_thi"))),
             "Điểm TB":             normalize_score(get("diem_tb")),
-            "Điểm làm tròn":       normalize_score(get("diem_lam_tron")),
+            "Điểm làm tròn":       normalize_score(get("diem_tb")),
             "Điểm chữ":            str(get("diem_chu")).strip() if get("diem_chu") else ""})
     return records
 
